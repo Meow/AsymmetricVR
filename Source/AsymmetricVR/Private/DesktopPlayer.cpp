@@ -51,6 +51,10 @@ void ADesktopPlayer::Move(const FInputActionValue& Value) {
   // input is a Vector2D
   FVector2D MovementVector = Value.Get<FVector2D>();
 
+  //UE_LOG(LogTemp, Warning, TEXT("MovementVector(%f %f)"), MovementVector.X, MovementVector.Y);
+  //UE_LOG(LogTemp, Warning, TEXT("GetActorForwardVector(%f %f %f)"), GetActorForwardVector().X, GetActorForwardVector().Y, GetActorForwardVector().Z);
+  //UE_LOG(LogTemp, Warning, TEXT("GetActorRightVector(%f %f %f)"), GetActorRightVector().X, GetActorRightVector().Y, GetActorRightVector().Z);
+
   if (Controller != nullptr) {
     // add movement 
     AddMovementInput(GetActorForwardVector(), MovementVector.Y);
@@ -70,7 +74,6 @@ void ADesktopPlayer::Look(const FInputActionValue& Value) {
 }
 
 // Called every frame
-void ADesktopPlayer::Tick(float DeltaTime) {
+void ADesktopPlayer::Tick(const float DeltaTime) {
   Super::Tick(DeltaTime);
-
 }
