@@ -19,5 +19,10 @@ public class AsymmetricVR : ModuleRules
 		PrivateDependencyModuleNames.Add("OnlineSubsystem");
 
 		// To include OnlineSubsystemSteam, add it to the plugins section in your uproject file with the Enabled attribute set to true
+
+		PublicDependencyModuleNames.Add("XRBase");
+		PublicDependencyModuleNames.Add("OpenXR");
+		PublicDependencyModuleNames.Add("OpenXREyeTracker");
+		PublicDependencyModuleNames.Add("OpenXRHandTracking");
 	}
 }

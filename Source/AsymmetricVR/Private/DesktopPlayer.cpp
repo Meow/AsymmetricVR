@@ -44,16 +44,18 @@ void ADesktopPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
     // Looking
     EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ADesktopPlayer::Look);
+
+		// Grabbing
+    EnhancedInputComponent->BindAction(GrabAction, ETriggerEvent::Triggered, this, &ADesktopPlayer::DummyAction);
+
+    // Interacting
+    EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Triggered, this, &ADesktopPlayer::DummyAction);
   }
 }
 
 void ADesktopPlayer::Move(const FInputActionValue& Value) {
   // input is a Vector2D
   FVector2D MovementVector = Value.Get<FVector2D>();
-
-  //UE_LOG(LogTemp, Warning, TEXT("MovementVector(%f %f)"), MovementVector.X, MovementVector.Y);
-  //UE_LOG(LogTemp, Warning, TEXT("GetActorForwardVector(%f %f %f)"), GetActorForwardVector().X, GetActorForwardVector().Y, GetActorForwardVector().Z);
-  //UE_LOG(LogTemp, Warning, TEXT("GetActorRightVector(%f %f %f)"), GetActorRightVector().X, GetActorRightVector().Y, GetActorRightVector().Z);
 
   if (Controller != nullptr) {
     // add movement 
@@ -76,4 +78,8 @@ void ADesktopPlayer::Look(const FInputActionValue& Value) {
 // Called every frame
 void ADesktopPlayer::Tick(const float DeltaTime) {
   Super::Tick(DeltaTime);
+}
+
+void ADesktopPlayer::DummyAction(const FInputActionValue& Value) {
+	UE_LOG(LogTemp, Warning, TEXT("DesktopPlayer - Dummy action triggered"));
 }

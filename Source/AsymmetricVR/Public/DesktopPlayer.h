@@ -30,6 +30,14 @@ class ASYMMETRICVR_API ADesktopPlayer : public ACharacter {
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AllowPrivateAccess = "true"))
   class UInputAction* LookAction;
 
+  /** Interaction Input Action */
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AllowPrivateAccess = "true"))
+  UInputAction* InteractAction;
+
+  /** Grab Input Action */
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AllowPrivateAccess = "true"))
+  UInputAction* GrabAction;
+
 public:
   // Sets default values for this character's properties
   ADesktopPlayer();
@@ -43,6 +51,9 @@ protected:
 
   /** Called for looking input */
   void Look(const FInputActionValue& Value);
+
+  /** Placeholder: called for any unimplemented inputs */
+  void DummyAction(const FInputActionValue& Value);
 
 public:
   // Called every frame

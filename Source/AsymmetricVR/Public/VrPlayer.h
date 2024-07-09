@@ -4,12 +4,58 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "VrTeleportVisualizer.h"
 #include "VrPlayer.generated.h"
+
+class UInputAction;
+struct FInputActionValue;
 
 UCLASS()
 class ASYMMETRICVR_API AVrPlayer : public APawn
 {
 	GENERATED_BODY()
+
+public:
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AsymmetricVr)
+	AVrTeleportVisualizer *TeleportVisualizer;
+
+  /** Jump Input Action */
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AllowPrivateAccess = "true"))
+  UInputAction* JumpAction;
+
+  /** Move Input Action */
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AllowPrivateAccess = "true"))
+  UInputAction* MoveAction;
+
+  /** Look Input Action */
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AllowPrivateAccess = "true"))
+  class UInputAction* LookAction;
+
+  /** Interaction Input Action */
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AllowPrivateAccess = "true"))
+  UInputAction* InteractAction;
+
+  /** Grab (right hand) Input Action */
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AllowPrivateAccess = "true"))
+  UInputAction* GrabRightAction;
+
+  /** Grab (left hand) Input Action */
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AllowPrivateAccess = "true"))
+  UInputAction* GrabLeftAction;
+
+  /** Teleport (right hand) Input Action */
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AllowPrivateAccess = "true"))
+  UInputAction* TeleportRightAction;
+
+  /** Teleport (left hand) Input Action */
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AllowPrivateAccess = "true"))
+  UInputAction* TeleportLeftAction;
+
+private:
+
+	IHeadMountedDisplay *HMD;
+	TSharedPtr<IStereoRendering, ESPMode::ThreadSafe> Stereo;
 
 public:
 	// Sets default values for this pawn's properties
@@ -18,6 +64,8 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	void DummyAction(const FInputActionValue& Value);
 
 public:	
 	// Called every frame
