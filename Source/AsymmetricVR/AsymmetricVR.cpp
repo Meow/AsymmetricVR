@@ -3,4 +3,4 @@
 #include "AsymmetricVR.h"
 #include "Modules/ModuleManager.h"
 
-IMPLEMENT_PRIMARY_GAME_MODULE( FDefaultGameModuleImpl, AsymmetricVR, "AsymmetricVR" );
+IMPLEMENT_PRIMARY_GAME_MODULE(FDefaultGameModuleImpl, AsymmetricVR, "AsymmetricVR");

@@ -11,67 +11,64 @@ class UInputAction;
 struct FInputActionValue;
 
 UCLASS()
-class ASYMMETRICVR_API AVrPlayer : public APawn
-{
-	GENERATED_BODY()
+
+class ASYMMETRICVR_API AVrPlayer : public APawn {
+  GENERATED_BODY()
 
 public:
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AsymmetricVr)
-	AVrTeleportVisualizer *TeleportVisualizer;
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AsymmetricVr)
+  AVrTeleportVisualizer *TeleportVisualizer;
 
   /** Jump Input Action */
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AllowPrivateAccess = "true"))
-  UInputAction* JumpAction;
+  UInputAction *JumpAction;
 
   /** Move Input Action */
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AllowPrivateAccess = "true"))
-  UInputAction* MoveAction;
+  UInputAction *MoveAction;
 
   /** Look Input Action */
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AllowPrivateAccess = "true"))
-  class UInputAction* LookAction;
+  class UInputAction *LookAction;
 
   /** Interaction Input Action */
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AllowPrivateAccess = "true"))
-  UInputAction* InteractAction;
+  UInputAction *InteractAction;
 
   /** Grab (right hand) Input Action */
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AllowPrivateAccess = "true"))
-  UInputAction* GrabRightAction;
+  UInputAction *GrabRightAction;
 
   /** Grab (left hand) Input Action */
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AllowPrivateAccess = "true"))
-  UInputAction* GrabLeftAction;
+  UInputAction *GrabLeftAction;
 
   /** Teleport (right hand) Input Action */
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AllowPrivateAccess = "true"))
-  UInputAction* TeleportRightAction;
+  UInputAction *TeleportRightAction;
 
   /** Teleport (left hand) Input Action */
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AllowPrivateAccess = "true"))
-  UInputAction* TeleportLeftAction;
+  UInputAction *TeleportLeftAction;
 
 private:
-
-	IHeadMountedDisplay *HMD;
-	TSharedPtr<IStereoRendering, ESPMode::ThreadSafe> Stereo;
+  IHeadMountedDisplay *HMD;
+  TSharedPtr<IStereoRendering, ESPMode::ThreadSafe> Stereo;
 
 public:
-	// Sets default values for this pawn's properties
-	AVrPlayer();
+  // Sets default values for this pawn's properties
+  AVrPlayer();
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+  // Called when the game starts or when spawned
+  virtual void BeginPlay() override;
 
-	void DummyAction(const FInputActionValue& Value);
+  void DummyAction(const FInputActionValue &Value);
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+public:
+  // Called every frame
+  virtual void Tick(float DeltaTime) override;
 
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
+  // Called to bind functionality to input
+  virtual void SetupPlayerInputComponent(class UInputComponent *PlayerInputComponent) override;
 };

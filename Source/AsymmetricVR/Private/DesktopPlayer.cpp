@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "DesktopPlayer.h"
 #include "Animation/AnimInstance.h"
 #include "Camera/CameraComponent.h"
@@ -18,7 +17,7 @@ ADesktopPlayer::ADesktopPlayer() {
   // Set size for collision capsule
   GetCapsuleComponent()->InitCapsuleSize(55.f, 96.0f);
 
-  // Create a CameraComponent	
+  // Create a CameraComponent
   FirstPersonCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
   FirstPersonCameraComponent->SetupAttachment(GetCapsuleComponent());
   FirstPersonCameraComponent->SetRelativeLocation(FVector(-10.f, 0.f, 60.f)); // Position the camera
@@ -26,15 +25,13 @@ ADesktopPlayer::ADesktopPlayer() {
 }
 
 // Called when the game starts or when spawned
-void ADesktopPlayer::BeginPlay() {
-  Super::BeginPlay();
-}
+void ADesktopPlayer::BeginPlay() { Super::BeginPlay(); }
 
-void ADesktopPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {
+void ADesktopPlayer::SetupPlayerInputComponent(UInputComponent *PlayerInputComponent) {
   Super::SetupPlayerInputComponent(PlayerInputComponent);
 
   // Set up action bindings
-  if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent)) {
+  if (UEnhancedInputComponent *EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent)) {
     // Jumping
     EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
     EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
@@ -45,7 +42,7 @@ void ADesktopPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
     // Looking
     EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ADesktopPlayer::Look);
 
-		// Grabbing
+    // Grabbing
     EnhancedInputComponent->BindAction(GrabAction, ETriggerEvent::Triggered, this, &ADesktopPlayer::DummyAction);
 
     // Interacting
@@ -53,18 +50,18 @@ void ADesktopPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
   }
 }
 
-void ADesktopPlayer::Move(const FInputActionValue& Value) {
+void ADesktopPlayer::Move(const FInputActionValue &Value) {
   // input is a Vector2D
   FVector2D MovementVector = Value.Get<FVector2D>();
 
   if (Controller != nullptr) {
-    // add movement 
+    // add movement
     AddMovementInput(GetActorForwardVector(), MovementVector.Y);
     AddMovementInput(GetActorRightVector(), MovementVector.X);
   }
 }
 
-void ADesktopPlayer::Look(const FInputActionValue& Value) {
+void ADesktopPlayer::Look(const FInputActionValue &Value) {
   // input is a Vector2D
   FVector2D LookAxisVector = Value.Get<FVector2D>();
 
@@ -76,10 +73,8 @@ void ADesktopPlayer::Look(const FInputActionValue& Value) {
 }
 
 // Called every frame
-void ADesktopPlayer::Tick(const float DeltaTime) {
-  Super::Tick(DeltaTime);
-}
+void ADesktopPlayer::Tick(const float DeltaTime) { Super::Tick(DeltaTime); }
 
-void ADesktopPlayer::DummyAction(const FInputActionValue& Value) {
-	UE_LOG(LogTemp, Warning, TEXT("DesktopPlayer - Dummy action triggered"));
+void ADesktopPlayer::DummyAction(const FInputActionValue &Value) {
+  UE_LOG(LogTemp, Warning, TEXT("DesktopPlayer - Dummy action triggered"));
 }

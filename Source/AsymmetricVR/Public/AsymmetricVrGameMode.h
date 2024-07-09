@@ -7,12 +7,12 @@
 #include "AsymmetricVrGameMode.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
-class ASYMMETRICVR_API AAsymmetricVrGameMode : public AGameModeBase
-{
-	GENERATED_BODY()
+
+class ASYMMETRICVR_API AAsymmetricVrGameMode : public AGameModeBase {
+  GENERATED_BODY()
 
 public:
   AAsymmetricVrGameMode();
