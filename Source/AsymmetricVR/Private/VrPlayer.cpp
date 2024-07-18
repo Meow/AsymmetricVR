@@ -16,21 +16,21 @@ AVrPlayer::AVrPlayer() {
 void AVrPlayer::BeginPlay() {
   Super::BeginPlay();
 
-  if (GEngine) {
-    HMD    = GEngine->XRSystem->GetHMDDevice();
-    Stereo = GEngine->XRSystem->GetStereoRenderingDevice();
-  } else {
-    UE_LOG(LogTemp, Warning, TEXT("Engine pointer is not available"));
-    return;
-  }
+  // if (GEngine) {
+  //   HMD    = GEngine->XRSystem->GetHMDDevice();
+  //   Stereo = GEngine->XRSystem->GetStereoRenderingDevice();
+  // } else {
+  //   UE_LOG(LogTemp, Warning, TEXT("Engine pointer is not available"));
+  //   return;
+  // }
 
-  if (!HMD || !Stereo) {
-    UE_LOG(LogTemp, Warning, TEXT("VR is not available"));
-    return;
-  }
+  // if (!HMD || !Stereo) {
+  //   UE_LOG(LogTemp, Warning, TEXT("VR is not available"));
+  //   return;
+  // }
 
-  if (HMD->IsHMDEnabled() && HMD->IsHMDConnected() && Stereo->IsStereoEnabled())
-    GEngine->XRSystem->SetTrackingOrigin(EHMDTrackingOrigin::Type::Stage);
+  // if (HMD->IsHMDEnabled() && HMD->IsHMDConnected() && Stereo->IsStereoEnabled())
+  //   GEngine->XRSystem->SetTrackingOrigin(EHMDTrackingOrigin::Type::Stage);
 }
 
 // Called every frame
@@ -43,10 +43,10 @@ void AVrPlayer::SetupPlayerInputComponent(UInputComponent *PlayerInputComponent)
   // Set up action bindings
   if (UEnhancedInputComponent *EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent)) {
     // Moving
-    EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AVrPlayer::DummyAction);
+    EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AVrPlayer::Move);
 
     // Looking
-    EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AVrPlayer::DummyAction);
+    EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AVrPlayer::Look);
 
     // Teleporting
     EnhancedInputComponent->BindAction(TeleportLeftAction, ETriggerEvent::Triggered, this, &AVrPlayer::DummyAction);
@@ -62,6 +62,24 @@ void AVrPlayer::SetupPlayerInputComponent(UInputComponent *PlayerInputComponent)
 
     // Interacting
     EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Triggered, this, &AVrPlayer::DummyAction);
+  }
+}
+
+void AVrPlayer::Move(const FInputActionValue &Value) {
+  FVector2D MovementVector = Value.Get<FVector2D>();
+
+  if (Controller != nullptr) {
+    AddMovementInput(GetActorForwardVector(), MovementVector.Y);
+    AddMovementInput(GetActorRightVector(), MovementVector.X);
+  }
+}
+
+void AVrPlayer::Look(const FInputActionValue &Value) {
+  FVector2D LookAxisVector = Value.Get<FVector2D>();
+
+  if (Controller != nullptr) {
+    AddControllerYawInput(LookAxisVector.X);
+    AddControllerPitchInput(LookAxisVector.Y);
   }
 }
 

@@ -9,7 +9,8 @@
 			"Type": "Runtime",
 			"LoadingPhase": "Default",
 			"AdditionalDependencies": [
-				"Engine"
+				"Engine",
+				"VRExpansionPlugin"
 			]
 		}
 	],
@@ -44,22 +45,25 @@
 			"Enabled": true
 		},
 		{
-			"Name": "OpenXRHandTracking",
+			"Name": "VRExpansionPlugin",
 			"Enabled": true,
 			"SupportedTargetPlatforms": [
 				"Win64",
 				"Linux",
 				"Android",
-				"VisionOS"
+				"Mac",
+				"IOS"
 			]
 		},
 		{
-			"Name": "OpenXREyeTracker",
-			"Enabled": true,
+			"Name": "OpenXRExpansionPlugin",
+			"Enabled": false,
 			"SupportedTargetPlatforms": [
 				"Win64",
 				"Linux",
-				"Android"
+				"Android",
+				"Mac",
+				"IOS"
 			]
 		}
 	],

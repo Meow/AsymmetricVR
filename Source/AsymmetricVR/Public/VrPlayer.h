@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "VrTeleportVisualizer.h"
+#include "VRCharacter.h"
 #include "VrPlayer.generated.h"
 
 class UInputAction;
@@ -12,7 +13,7 @@ struct FInputActionValue;
 
 UCLASS()
 
-class ASYMMETRICVR_API AVrPlayer : public APawn {
+class ASYMMETRICVR_API AVrPlayer : public AVRCharacter {
   GENERATED_BODY()
 
 public:
@@ -29,7 +30,7 @@ public:
 
   /** Look Input Action */
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AllowPrivateAccess = "true"))
-  class UInputAction *LookAction;
+  UInputAction *LookAction;
 
   /** Interaction Input Action */
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AllowPrivateAccess = "true"))
@@ -51,9 +52,9 @@ public:
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AllowPrivateAccess = "true"))
   UInputAction *TeleportLeftAction;
 
-private:
-  IHeadMountedDisplay *HMD;
-  TSharedPtr<IStereoRendering, ESPMode::ThreadSafe> Stereo;
+// private:
+//   IHeadMountedDisplay *HMD;
+//   TSharedPtr<IStereoRendering, ESPMode::ThreadSafe> Stereo;
 
 public:
   // Sets default values for this pawn's properties
@@ -62,6 +63,10 @@ public:
 protected:
   // Called when the game starts or when spawned
   virtual void BeginPlay() override;
+
+  void Move(const FInputActionValue &Value);
+
+  void Look(const FInputActionValue &Value);
 
   void DummyAction(const FInputActionValue &Value);
 

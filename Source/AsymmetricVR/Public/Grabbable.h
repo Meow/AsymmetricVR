@@ -15,6 +15,18 @@ public:
   // Sets default values for this component's properties
   UGrabbable();
 
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Grabbable)
+  bool IsHeld = false;
+
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Grabbable)
+  bool PhysicsOnDrop = false;
+
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Grabbable)
+  bool Snap = false;
+
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Grabbable)
+  FRotator GrabRotation;
+
 protected:
   // Called when the game starts
   virtual void BeginPlay() override;
@@ -23,4 +35,10 @@ public:
   // Called every frame
   virtual void
     TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
+
+  UFUNCTION(BlueprintCallable, Category = Grabbable)
+  void Grab();
+
+  UFUNCTION(BlueprintCallable, Category = Grabbable)
+  void Release();
 };

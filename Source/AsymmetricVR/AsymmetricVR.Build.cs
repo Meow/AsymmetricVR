@@ -22,7 +22,6 @@ public class AsymmetricVR : ModuleRules
 
 		PublicDependencyModuleNames.Add("XRBase");
 		PublicDependencyModuleNames.Add("OpenXR");
-		PublicDependencyModuleNames.Add("OpenXREyeTracker");
-		PublicDependencyModuleNames.Add("OpenXRHandTracking");
+		PublicDependencyModuleNames.Add("VRExpansionPlugin");
 	}
 }
