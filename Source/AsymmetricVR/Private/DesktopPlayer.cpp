@@ -51,22 +51,18 @@ void ADesktopPlayer::SetupPlayerInputComponent(UInputComponent *PlayerInputCompo
 }
 
 void ADesktopPlayer::Move(const FInputActionValue &Value) {
-  // input is a Vector2D
   FVector2D MovementVector = Value.Get<FVector2D>();
 
   if (Controller != nullptr) {
-    // add movement
     AddMovementInput(GetActorForwardVector(), MovementVector.Y);
     AddMovementInput(GetActorRightVector(), MovementVector.X);
   }
 }
 
 void ADesktopPlayer::Look(const FInputActionValue &Value) {
-  // input is a Vector2D
   FVector2D LookAxisVector = Value.Get<FVector2D>();
 
   if (Controller != nullptr) {
-    // add yaw and pitch input to controller
     AddControllerYawInput(LookAxisVector.X);
     AddControllerPitchInput(LookAxisVector.Y);
   }
