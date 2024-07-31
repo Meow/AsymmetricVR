@@ -18,43 +18,48 @@ class ASYMMETRICVR_API AVrPlayer : public AVRCharacter {
 
 public:
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AsymmetricVr)
-  AVrTeleportVisualizer *TeleportVisualizer;
+  TObjectPtr<AVrTeleportVisualizer> TeleportVisualizer;
 
   /** Jump Input Action */
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AllowPrivateAccess = "true"))
-  UInputAction *JumpAction;
+  TObjectPtr<UInputAction> JumpAction;
 
   /** Move Input Action */
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AllowPrivateAccess = "true"))
-  UInputAction *MoveAction;
+  TObjectPtr<UInputAction> MoveAction;
 
   /** Look Input Action */
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AllowPrivateAccess = "true"))
-  UInputAction *LookAction;
+  TObjectPtr<UInputAction> LookAction;
 
   /** Interaction Input Action */
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AllowPrivateAccess = "true"))
-  UInputAction *InteractAction;
+  TObjectPtr<UInputAction> InteractAction;
 
   /** Grab (right hand) Input Action */
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AllowPrivateAccess = "true"))
-  UInputAction *GrabRightAction;
+  TObjectPtr<UInputAction> GrabRightAction;
 
   /** Grab (left hand) Input Action */
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AllowPrivateAccess = "true"))
-  UInputAction *GrabLeftAction;
+  TObjectPtr<UInputAction> GrabLeftAction;
 
   /** Teleport (right hand) Input Action */
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AllowPrivateAccess = "true"))
-  UInputAction *TeleportRightAction;
+  TObjectPtr<UInputAction> TeleportRightAction;
 
   /** Teleport (left hand) Input Action */
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AllowPrivateAccess = "true"))
-  UInputAction *TeleportLeftAction;
+  TObjectPtr<UInputAction> TeleportLeftAction;
 
-// private:
-//   IHeadMountedDisplay *HMD;
-//   TSharedPtr<IStereoRendering, ESPMode::ThreadSafe> Stereo;
+  /** Use continuous locomotion instead of teleportation. Disables teleportation. */
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AllowPrivateAccess = "true"))
+  bool ContinuousLocomotion = true;
+
+private:
+  bool IsTeleporting = false;
+
+  bool TeleportRightHand = false;
 
 public:
   // Sets default values for this pawn's properties
@@ -67,6 +72,14 @@ protected:
   void Move(const FInputActionValue &Value);
 
   void Look(const FInputActionValue &Value);
+
+  void BeginTeleportRight();
+
+  void BeginTeleportLeft();
+
+  void BeginTeleport(bool RightHand = false);
+
+  void Teleport();
 
   void DummyAction(const FInputActionValue &Value);
 

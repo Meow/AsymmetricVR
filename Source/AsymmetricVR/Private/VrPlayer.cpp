@@ -5,6 +5,7 @@
 #include "IXRTrackingSystem.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "ParentRelativeAttachmentComponent.h"
 
 // Sets default values
 AVrPlayer::AVrPlayer() {
@@ -49,12 +50,17 @@ void AVrPlayer::SetupPlayerInputComponent(UInputComponent *PlayerInputComponent)
     EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AVrPlayer::Look);
 
     // Teleporting
-    EnhancedInputComponent->BindAction(TeleportLeftAction, ETriggerEvent::Triggered, this, &AVrPlayer::DummyAction);
-    EnhancedInputComponent->BindAction(TeleportRightAction, ETriggerEvent::Triggered, this, &AVrPlayer::DummyAction);
+    EnhancedInputComponent->BindAction(TeleportLeftAction, ETriggerEvent::Started, this, &AVrPlayer::BeginTeleportLeft);
+    EnhancedInputComponent->BindAction(TeleportLeftAction, ETriggerEvent::Completed, this, &AVrPlayer::Teleport);
+
+    EnhancedInputComponent->BindAction(
+      TeleportRightAction, ETriggerEvent::Started, this, &AVrPlayer::BeginTeleportRight
+    );
+    EnhancedInputComponent->BindAction(TeleportRightAction, ETriggerEvent::Completed, this, &AVrPlayer::Teleport);
 
     // Jumping
-    EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &AVrPlayer::DummyAction);
-    EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &AVrPlayer::DummyAction);
+    EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
+    EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
 
     // Grabbing
     EnhancedInputComponent->BindAction(GrabLeftAction, ETriggerEvent::Triggered, this, &AVrPlayer::DummyAction);
@@ -66,11 +72,14 @@ void AVrPlayer::SetupPlayerInputComponent(UInputComponent *PlayerInputComponent)
 }
 
 void AVrPlayer::Move(const FInputActionValue &Value) {
+  if (IsTeleporting || !ContinuousLocomotion)
+    return;
+
   FVector2D MovementVector = Value.Get<FVector2D>();
 
   if (Controller != nullptr) {
-    AddMovementInput(GetActorForwardVector(), MovementVector.Y);
-    AddMovementInput(GetActorRightVector(), MovementVector.X);
+    AddMovementInput(ParentRelativeAttachment->GetForwardVector(), MovementVector.Y);
+    AddMovementInput(ParentRelativeAttachment->GetRightVector(), MovementVector.X);
   }
 }
 
@@ -81,6 +90,38 @@ void AVrPlayer::Look(const FInputActionValue &Value) {
     AddControllerYawInput(LookAxisVector.X);
     AddControllerPitchInput(LookAxisVector.Y);
   }
+}
+
+void AVrPlayer::BeginTeleportRight() { this->BeginTeleport(true); }
+
+void AVrPlayer::BeginTeleportLeft() { this->BeginTeleport(false); }
+
+void AVrPlayer::BeginTeleport(bool RightHand) {
+  // prevent triggering by another hand while teleporting with one hand
+  if (IsTeleporting || ContinuousLocomotion)
+    return;
+
+  UE_LOG(
+    LogTemp, Warning, TEXT("VrPlayer - Begin teleport! Using right hand - %s"), RightHand ? TEXT("yes") : TEXT("no")
+  );
+
+  IsTeleporting     = true;
+  TeleportRightHand = RightHand;
+}
+
+void AVrPlayer::Teleport() {
+  // prevent accidental triggering
+  if (!IsTeleporting || ContinuousLocomotion)
+    return;
+
+  UE_LOG(
+    LogTemp,
+    Warning,
+    TEXT("VrPlayer - End teleport! Using right hand - %s"),
+    TeleportRightHand ? TEXT("yes") : TEXT("no")
+  );
+
+  IsTeleporting = false;
 }
 
 void AVrPlayer::DummyAction(const FInputActionValue &Value) {

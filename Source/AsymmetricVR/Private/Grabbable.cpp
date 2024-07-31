@@ -25,10 +25,6 @@ void UGrabbable::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompo
   // ...
 }
 
-void UGrabbable::Grab() {
+void UGrabbable::Grab() {}
 
-}
-
-void UGrabbable::Release() {
-
-}
+void UGrabbable::Release() {}
