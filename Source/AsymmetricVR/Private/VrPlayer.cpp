@@ -6,11 +6,32 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "ParentRelativeAttachmentComponent.h"
+#include "CoreUObject.h"
+#include "GripMotionControllerComponent.h"
+#include "Components/SphereComponent.h"
+#include "Grippables/GrippableActor.h"
+#include "Interactible.h"
 
 // Sets default values
 AVrPlayer::AVrPlayer() {
   // Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
   PrimaryActorTick.bCanEverTick = true;
+
+  LeftGrabSphere = CreateOptionalDefaultSubobject<USphereComponent>("LeftGrabSphere");
+
+  if (LeftGrabSphere) {
+    LeftGrabSphere->SetupAttachment(LeftMotionController);
+    LeftGrabSphere->SetSphereRadius(10.0f);
+    LeftGrabSphere->SetRelativeTransform(FTransform(FVector(0.0, 5.0, 0.0)));
+  }
+
+  RightGrabSphere = CreateOptionalDefaultSubobject<USphereComponent>("RightGrabSphere");
+
+  if (RightGrabSphere) {
+    RightGrabSphere->SetupAttachment(RightMotionController);
+    RightGrabSphere->SetSphereRadius(10.0f);
+    RightGrabSphere->SetRelativeTransform(FTransform(FVector(0.0, -5.0, 0.0)));
+  }
 }
 
 // Called when the game starts or when spawned
@@ -63,11 +84,14 @@ void AVrPlayer::SetupPlayerInputComponent(UInputComponent *PlayerInputComponent)
     EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
 
     // Grabbing
-    EnhancedInputComponent->BindAction(GrabLeftAction, ETriggerEvent::Triggered, this, &AVrPlayer::DummyAction);
-    EnhancedInputComponent->BindAction(GrabRightAction, ETriggerEvent::Triggered, this, &AVrPlayer::DummyAction);
+    EnhancedInputComponent->BindAction(GrabLeftAction, ETriggerEvent::Started, this, &AVrPlayer::BeginGrabLeft);
+    EnhancedInputComponent->BindAction(GrabLeftAction, ETriggerEvent::Completed, this, &AVrPlayer::ReleaseGrabLeft);
+
+    EnhancedInputComponent->BindAction(GrabRightAction, ETriggerEvent::Started, this, &AVrPlayer::BeginGrabRight);
+    EnhancedInputComponent->BindAction(GrabRightAction, ETriggerEvent::Completed, this, &AVrPlayer::ReleaseGrabRight);
 
     // Interacting
-    EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Triggered, this, &AVrPlayer::DummyAction);
+    //EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Triggered, this, &AVrPlayer::Interact);
   }
 }
 
@@ -123,6 +147,70 @@ void AVrPlayer::Teleport() {
 
   IsTeleporting = false;
 }
+
+void AVrPlayer::BeginGrip(const USphereComponent *const Sphere, UGripMotionControllerComponent *const GripController) const {
+  // No grippy if we already gripped something!
+  if (GripController->HasGrippedObjects())
+    return;
+
+  TArray<AActor *> OverlappingActors;
+
+  Sphere->GetOverlappingActors(OverlappingActors, AGrippableActor::StaticClass());
+
+  for (auto Actor : OverlappingActors) {
+    if (IsValid(Actor) && Actor != this) {
+      FTransform Offset(FVector(0.0, 0.0, 0.0));
+
+      if (GripController->GripActor(Actor, Offset))
+        break;
+    }
+  }
+}
+
+void AVrPlayer::ReleaseGrip(UGripMotionControllerComponent *const GripController) const {
+  if (!GripController->HasGrippedObjects())
+    return;
+
+  TArray<FBPActorGripInformation> ActorGrips;
+
+  GripController->GetAllGrips(ActorGrips);
+
+  for (const auto &GrippedObject : ActorGrips) {
+    auto Actor = GrippedObject.GetGrippedActor();
+
+    if (IsValid(Actor)) {
+      GripController->DropActor(Actor, false);
+    }
+  }
+}
+
+void AVrPlayer::BeginGrabRight() { BeginGrip(RightGrabSphere, RightMotionController); }
+
+void AVrPlayer::BeginGrabLeft() { BeginGrip(LeftGrabSphere, LeftMotionController); }
+
+void AVrPlayer::ReleaseGrabRight() { ReleaseGrip(RightMotionController); }
+
+void AVrPlayer::ReleaseGrabLeft() { ReleaseGrip(LeftMotionController); }
+
+void AVrPlayer::Interact(const USphereComponent *const Sphere) {
+  TArray<AActor *> OverlappingActors;
+
+  Sphere->GetOverlappingActors(OverlappingActors);
+
+  for (auto Actor : OverlappingActors) {
+    if (IsValid(Actor) && Actor != this) {
+      auto InteractibleComponent = Actor->GetComponentByClass<UInteractible>();
+
+      if (IsValid(InteractibleComponent)) {
+        InteractibleComponent->OnInteract.Broadcast(this, nullptr);
+      }
+    }
+  }
+}
+
+void AVrPlayer::InteractRight() { Interact(RightGrabSphere); }
+
+void AVrPlayer::InteractLeft() { Interact(LeftGrabSphere); }
 
 void AVrPlayer::DummyAction(const FInputActionValue &Value) {
   UE_LOG(LogTemp, Warning, TEXT("VrPlayer - Dummy action triggered"));

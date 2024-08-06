@@ -9,6 +9,7 @@
 #include "VrPlayer.generated.h"
 
 class UInputAction;
+class USphereComponent;
 struct FInputActionValue;
 
 UCLASS()
@@ -56,6 +57,12 @@ public:
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AllowPrivateAccess = "true"))
   bool ContinuousLocomotion = true;
 
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AllowPrivateAccess = "true"))
+  TObjectPtr<USphereComponent> LeftGrabSphere;
+
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AllowPrivateAccess = "true"))
+  TObjectPtr<USphereComponent> RightGrabSphere;
+
 private:
   bool IsTeleporting = false;
 
@@ -81,7 +88,27 @@ protected:
 
   void Teleport();
 
+  void BeginGrabRight();
+
+  void BeginGrabLeft();
+
+  void ReleaseGrabRight();
+
+  void ReleaseGrabLeft();
+
+  void InteractLeft();
+
+  void InteractRight();
+
   void DummyAction(const FInputActionValue &Value);
+
+private:
+
+  void BeginGrip(const USphereComponent *const Sphere, UGripMotionControllerComponent *const GripController) const;
+
+  void ReleaseGrip(UGripMotionControllerComponent *GripController) const;
+
+  void Interact(const USphereComponent *const Sphere);
 
 public:
   // Called every frame

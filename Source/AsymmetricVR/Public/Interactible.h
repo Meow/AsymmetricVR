@@ -4,16 +4,26 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "Interactable.generated.h"
+#include "Interactible.generated.h"
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(
+  FInteractibleActionSignature,
+  AActor *,
+  InteractingActor,
+  UPrimitiveComponent *,
+  InteractingComponent
+);
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 
-class ASYMMETRICVR_API UInteractable : public UActorComponent {
+class ASYMMETRICVR_API UInteractible : public UActorComponent {
   GENERATED_BODY()
 
 public:
   // Sets default values for this component's properties
-  UInteractable();
+  UInteractible();
+
+  FInteractibleActionSignature OnInteract;
 
 protected:
   // Called when the game starts
