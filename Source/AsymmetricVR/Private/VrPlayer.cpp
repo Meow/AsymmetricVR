@@ -91,7 +91,8 @@ void AVrPlayer::SetupPlayerInputComponent(UInputComponent *PlayerInputComponent)
     EnhancedInputComponent->BindAction(GrabRightAction, ETriggerEvent::Completed, this, &AVrPlayer::ReleaseGrabRight);
 
     // Interacting
-    //EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Triggered, this, &AVrPlayer::Interact);
+    EnhancedInputComponent->BindAction(InteractLeftAction, ETriggerEvent::Triggered, this, &AVrPlayer::InteractLeft);
+    EnhancedInputComponent->BindAction(InteractRightAction, ETriggerEvent::Triggered, this, &AVrPlayer::InteractRight);
   }
 }
 
@@ -149,17 +150,23 @@ void AVrPlayer::Teleport() {
 }
 
 void AVrPlayer::BeginGrip(const USphereComponent *const Sphere, UGripMotionControllerComponent *const GripController) const {
+  UE_LOG(LogTemp, Warning, TEXT("VrPlayer - Begin grip!"));
+
   // No grippy if we already gripped something!
   if (GripController->HasGrippedObjects())
     return;
 
   TArray<AActor *> OverlappingActors;
 
-  Sphere->GetOverlappingActors(OverlappingActors, AGrippableActor::StaticClass());
+  Sphere->GetOverlappingActors(OverlappingActors);
 
   for (auto Actor : OverlappingActors) {
     if (IsValid(Actor) && Actor != this) {
-      FTransform Offset(FVector(0.0, 0.0, 0.0));
+      FTransform Offset(GripController->GetComponentLocation());
+
+      Offset.SetRotation(Actor->GetActorRotation().Quaternion());
+
+      UE_LOG(LogTemp, Warning, TEXT("VrPlayer - Found something to grip, doing so!"));
 
       if (GripController->GripActor(Actor, Offset))
         break;
@@ -168,6 +175,8 @@ void AVrPlayer::BeginGrip(const USphereComponent *const Sphere, UGripMotionContr
 }
 
 void AVrPlayer::ReleaseGrip(UGripMotionControllerComponent *const GripController) const {
+  UE_LOG(LogTemp, Warning, TEXT("VrPlayer - Release grip!"));
+
   if (!GripController->HasGrippedObjects())
     return;
 
@@ -177,6 +186,8 @@ void AVrPlayer::ReleaseGrip(UGripMotionControllerComponent *const GripController
 
   for (const auto &GrippedObject : ActorGrips) {
     auto Actor = GrippedObject.GetGrippedActor();
+
+    UE_LOG(LogTemp, Warning, TEXT("VrPlayer - Releasing grip on held object"));
 
     if (IsValid(Actor)) {
       GripController->DropActor(Actor, false);

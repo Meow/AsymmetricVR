@@ -23,6 +23,7 @@ public:
   // Sets default values for this component's properties
   UInteractible();
 
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AsymmetricVr)
   FInteractibleActionSignature OnInteract;
 
 protected:

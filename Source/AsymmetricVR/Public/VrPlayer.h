@@ -33,9 +33,14 @@ public:
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AllowPrivateAccess = "true"))
   TObjectPtr<UInputAction> LookAction;
 
-  /** Interaction Input Action */
+  /** Interaction Input Action for Left Hand */
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AllowPrivateAccess = "true"))
-  TObjectPtr<UInputAction> InteractAction;
+  TObjectPtr<UInputAction> InteractLeftAction;
+
+  /** Interaction Input Action for Right Hand */
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AllowPrivateAccess = "true"))
+  TObjectPtr<UInputAction> InteractRightAction;
+
 
   /** Grab (right hand) Input Action */
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AllowPrivateAccess = "true"))
