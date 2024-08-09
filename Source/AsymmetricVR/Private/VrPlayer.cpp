@@ -195,13 +195,33 @@ void AVrPlayer::ReleaseGrip(UGripMotionControllerComponent *const GripController
   }
 }
 
-void AVrPlayer::BeginGrabRight() { BeginGrip(RightGrabSphere, RightMotionController); }
+void AVrPlayer::BeginGrabRight() {
+  if (HasAuthority())
+    BeginGrip(RightGrabSphere, RightMotionController);
+  else
+    Server_BeginGrip(RightGrabSphere, RightMotionController);
+}
 
-void AVrPlayer::BeginGrabLeft() { BeginGrip(LeftGrabSphere, LeftMotionController); }
+void AVrPlayer::BeginGrabLeft() {
+  if (HasAuthority())
+    BeginGrip(LeftGrabSphere, LeftMotionController);
+  else
+    Server_BeginGrip(LeftGrabSphere, LeftMotionController);
+}
 
-void AVrPlayer::ReleaseGrabRight() { ReleaseGrip(RightMotionController); }
+void AVrPlayer::ReleaseGrabRight() {
+  if (HasAuthority())
+    ReleaseGrip(RightMotionController);
+  else
+    Server_ReleaseGrip(RightMotionController);
+}
 
-void AVrPlayer::ReleaseGrabLeft() { ReleaseGrip(LeftMotionController); }
+void AVrPlayer::ReleaseGrabLeft() {
+  if (HasAuthority())
+    ReleaseGrip(LeftMotionController);
+  else
+    Server_ReleaseGrip(LeftMotionController);
+}
 
 void AVrPlayer::Interact(const USphereComponent *const Sphere) {
   TArray<AActor *> OverlappingActors;
@@ -219,9 +239,51 @@ void AVrPlayer::Interact(const USphereComponent *const Sphere) {
   }
 }
 
-void AVrPlayer::InteractRight() { Interact(RightGrabSphere); }
+void AVrPlayer::InteractRight() {
+  if (HasAuthority())
+    Interact(RightGrabSphere);
+  else
+    Server_Interact(RightGrabSphere);
+}
 
-void AVrPlayer::InteractLeft() { Interact(LeftGrabSphere); }
+void AVrPlayer::InteractLeft() {
+  if (HasAuthority())
+    Interact(LeftGrabSphere);
+  else
+    Server_Interact(LeftGrabSphere);
+}
+
+// SERVERSIDE
+
+bool AVrPlayer::Server_BeginGrip_Validate(
+  const USphereComponent *Sphere, UGripMotionControllerComponent *GripController
+) {
+  return true;
+}
+
+void AVrPlayer::Server_BeginGrip_Implementation(
+  const USphereComponent *Sphere, UGripMotionControllerComponent *GripController
+) {
+  return this->BeginGrip(Sphere, GripController);
+}
+
+bool AVrPlayer::Server_ReleaseGrip_Validate(UGripMotionControllerComponent *GripController) { return true; }
+
+void AVrPlayer::Server_ReleaseGrip_Implementation(UGripMotionControllerComponent *GripController) {
+  return this->ReleaseGrip(GripController);
+}
+
+bool AVrPlayer::Server_Interact_Validate(
+  const USphereComponent *Sphere
+) {
+  return true;
+}
+
+void AVrPlayer::Server_Interact_Implementation(
+  const USphereComponent *Sphere
+) {
+  return this->Interact(Sphere);
+}
 
 void AVrPlayer::DummyAction(const FInputActionValue &Value) {
   UE_LOG(LogTemp, Warning, TEXT("VrPlayer - Dummy action triggered"));

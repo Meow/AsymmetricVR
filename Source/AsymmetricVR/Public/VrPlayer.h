@@ -115,6 +115,17 @@ private:
 
   void Interact(const USphereComponent *const Sphere);
 
+  // Serverside
+
+  UFUNCTION(Server, Reliable, WithValidation)
+  void Server_BeginGrip(const USphereComponent *Sphere, UGripMotionControllerComponent *GripController);
+
+  UFUNCTION(Server, Reliable, WithValidation)
+  void Server_ReleaseGrip(UGripMotionControllerComponent *GripController);
+
+  UFUNCTION(Server, Reliable, WithValidation)
+  void Server_Interact(const USphereComponent *const Sphere);
+
 public:
   // Called every frame
   virtual void Tick(float DeltaTime) override;
