@@ -14,7 +14,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(
   InteractingComponent
 );
 
-UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
+UCLASS(Blueprintable, ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 
 class ASYMMETRICVR_API UInteractible : public UActorComponent {
   GENERATED_BODY()
@@ -23,8 +23,11 @@ public:
   // Sets default values for this component's properties
   UInteractible();
 
-  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AsymmetricVr)
-  FInteractibleActionSignature OnInteract;
+  UFUNCTION(BlueprintImplementableEvent, Category = "AsymmetricVR")
+  void OnInteract(class AActor *InteractingActor);
+
+  //UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AsymmetricVr)
+  //FInteractibleActionSignature OnInteract;
 
 protected:
   // Called when the game starts

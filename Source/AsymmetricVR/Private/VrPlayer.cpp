@@ -233,7 +233,7 @@ void AVrPlayer::Interact(const USphereComponent *const Sphere) {
       auto InteractibleComponent = Actor->GetComponentByClass<UInteractible>();
 
       if (IsValid(InteractibleComponent)) {
-        InteractibleComponent->OnInteract.Broadcast(this, nullptr);
+        InteractibleComponent->OnInteract(this);
       }
     }
   }
