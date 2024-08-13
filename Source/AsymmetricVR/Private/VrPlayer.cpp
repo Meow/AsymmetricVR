@@ -91,8 +91,8 @@ void AVrPlayer::SetupPlayerInputComponent(UInputComponent *PlayerInputComponent)
     EnhancedInputComponent->BindAction(GrabRightAction, ETriggerEvent::Completed, this, &AVrPlayer::ReleaseGrabRight);
 
     // Interacting
-    EnhancedInputComponent->BindAction(InteractLeftAction, ETriggerEvent::Triggered, this, &AVrPlayer::InteractLeft);
-    EnhancedInputComponent->BindAction(InteractRightAction, ETriggerEvent::Triggered, this, &AVrPlayer::InteractRight);
+    EnhancedInputComponent->BindAction(InteractLeftAction, ETriggerEvent::Completed, this, &AVrPlayer::InteractLeft);
+    EnhancedInputComponent->BindAction(InteractRightAction, ETriggerEvent::Completed, this, &AVrPlayer::InteractRight);
   }
 }
 
@@ -166,8 +166,6 @@ void AVrPlayer::BeginGrip(const USphereComponent *const Sphere, UGripMotionContr
 
       Offset.SetRotation(Actor->GetActorRotation().Quaternion());
 
-      UE_LOG(LogTemp, Warning, TEXT("VrPlayer - Found something to grip, doing so!"));
-
       if (GripController->GripActor(Actor, Offset))
         break;
     }
@@ -186,8 +184,6 @@ void AVrPlayer::ReleaseGrip(UGripMotionControllerComponent *const GripController
 
   for (const auto &GrippedObject : ActorGrips) {
     auto Actor = GrippedObject.GetGrippedActor();
-
-    UE_LOG(LogTemp, Warning, TEXT("VrPlayer - Releasing grip on held object"));
 
     if (IsValid(Actor)) {
       GripController->DropActor(Actor, false);
