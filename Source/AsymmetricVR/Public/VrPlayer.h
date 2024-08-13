@@ -41,7 +41,6 @@ public:
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AllowPrivateAccess = "true"))
   TObjectPtr<UInputAction> InteractRightAction;
 
-
   /** Grab (right hand) Input Action */
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AllowPrivateAccess = "true"))
   TObjectPtr<UInputAction> GrabRightAction;
@@ -108,7 +107,6 @@ protected:
   void DummyAction(const FInputActionValue &Value);
 
 private:
-
   void BeginGrip(const USphereComponent *const Sphere, UGripMotionControllerComponent *const GripController) const;
 
   void ReleaseGrip(UGripMotionControllerComponent *GripController) const;

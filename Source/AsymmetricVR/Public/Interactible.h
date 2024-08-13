@@ -7,11 +7,7 @@
 #include "Interactible.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(
-  FInteractibleActionSignature,
-  AActor *,
-  InteractingActor,
-  UPrimitiveComponent *,
-  InteractingComponent
+  FInteractibleActionSignature, AActor *, InteractingActor, UPrimitiveComponent *, InteractingComponent
 );
 
 UCLASS(Blueprintable, ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
@@ -26,8 +22,8 @@ public:
   UFUNCTION(BlueprintImplementableEvent, Category = "AsymmetricVR")
   void OnInteract(class AActor *InteractingActor);
 
-  //UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AsymmetricVr)
-  //FInteractibleActionSignature OnInteract;
+  // UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AsymmetricVr)
+  // FInteractibleActionSignature OnInteract;
 
 protected:
   // Called when the game starts

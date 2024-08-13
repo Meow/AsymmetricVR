@@ -149,7 +149,8 @@ void AVrPlayer::Teleport() {
   IsTeleporting = false;
 }
 
-void AVrPlayer::BeginGrip(const USphereComponent *const Sphere, UGripMotionControllerComponent *const GripController) const {
+void AVrPlayer::BeginGrip(const USphereComponent *const Sphere, UGripMotionControllerComponent *const GripController)
+  const {
   UE_LOG(LogTemp, Warning, TEXT("VrPlayer - Begin grip!"));
 
   // No grippy if we already gripped something!
@@ -185,9 +186,8 @@ void AVrPlayer::ReleaseGrip(UGripMotionControllerComponent *const GripController
   for (const auto &GrippedObject : ActorGrips) {
     auto Actor = GrippedObject.GetGrippedActor();
 
-    if (IsValid(Actor)) {
+    if (IsValid(Actor))
       GripController->DropActor(Actor, false);
-    }
   }
 }
 
@@ -228,9 +228,8 @@ void AVrPlayer::Interact(const USphereComponent *const Sphere) {
     if (IsValid(Actor) && Actor != this) {
       auto InteractibleComponent = Actor->GetComponentByClass<UInteractible>();
 
-      if (IsValid(InteractibleComponent)) {
+      if (IsValid(InteractibleComponent))
         InteractibleComponent->OnInteract(this);
-      }
     }
   }
 }
@@ -269,17 +268,9 @@ void AVrPlayer::Server_ReleaseGrip_Implementation(UGripMotionControllerComponent
   return this->ReleaseGrip(GripController);
 }
 
-bool AVrPlayer::Server_Interact_Validate(
-  const USphereComponent *Sphere
-) {
-  return true;
-}
+bool AVrPlayer::Server_Interact_Validate(const USphereComponent *Sphere) { return true; }
 
-void AVrPlayer::Server_Interact_Implementation(
-  const USphereComponent *Sphere
-) {
-  return this->Interact(Sphere);
-}
+void AVrPlayer::Server_Interact_Implementation(const USphereComponent *Sphere) { return this->Interact(Sphere); }
 
 void AVrPlayer::DummyAction(const FInputActionValue &Value) {
   UE_LOG(LogTemp, Warning, TEXT("VrPlayer - Dummy action triggered"));

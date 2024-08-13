@@ -25,6 +25,6 @@ void UInteractible::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
   // ...
 }
 
-//void UInteractible::OnInteract_Implementation(AActor *InteractingActor, UPrimitiveComponent *InteractingComponent) {
-//  UE_LOG(LogTemp, Warning, TEXT("OnInteract used without implementation"));
-//}
+// void UInteractible::OnInteract_Implementation(AActor *InteractingActor, UPrimitiveComponent *InteractingComponent) {
+//   UE_LOG(LogTemp, Warning, TEXT("OnInteract used without implementation"));
+// }
