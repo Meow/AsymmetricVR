@@ -8,6 +8,7 @@
 
 class UCameraComponent;
 class UInputAction;
+class UBoxComponent;
 struct FInputActionValue;
 
 UCLASS(config = Game)
@@ -39,11 +40,16 @@ class ASYMMETRICVR_API ADesktopPlayer : public ACharacter {
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AllowPrivateAccess = "true"))
   UInputAction *GrabAction;
 
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AllowPrivateAccess = "true"))
+  TObjectPtr<UBoxComponent> InteractionBox;
+
 public:
   // Sets default values for this character's properties
   ADesktopPlayer();
 
 protected:
+  AActor *GrabbedObject;
+
   // Called when the game starts or when spawned
   virtual void BeginPlay() override;
 
@@ -52,6 +58,12 @@ protected:
 
   /** Called for looking input */
   void Look(const FInputActionValue &Value);
+
+  /** Called when interacting with stuff */
+  void Interact();
+
+  /* Called when grabbing stuff */
+  void Grab();
 
   /** Placeholder: called for any unimplemented inputs */
   void DummyAction(const FInputActionValue &Value);

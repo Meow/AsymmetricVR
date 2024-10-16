@@ -13,7 +13,8 @@ class UInputMappingContext;
  */
 UCLASS()
 
-class ASYMMETRICVR_API AAsymmetricVrPlayerController : public APlayerController {
+class ASYMMETRICVR_API AAsymmetricVrPlayerController
+  : public APlayerController {
   GENERATED_BODY()
 
 protected:

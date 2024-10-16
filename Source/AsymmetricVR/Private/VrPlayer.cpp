@@ -219,6 +219,20 @@ void AVrPlayer::ReleaseGrabLeft() {
     Server_ReleaseGrip(LeftMotionController);
 }
 
+void AVrPlayer::InteractRight() {
+  if (HasAuthority())
+    Interact(RightGrabSphere);
+  else
+    Server_Interact(RightGrabSphere);
+}
+
+void AVrPlayer::InteractLeft() {
+  if (HasAuthority())
+    Interact(LeftGrabSphere);
+  else
+    Server_Interact(LeftGrabSphere);
+}
+
 void AVrPlayer::Interact(const USphereComponent *const Sphere) {
   TArray<AActor *> OverlappingActors;
 
@@ -232,20 +246,6 @@ void AVrPlayer::Interact(const USphereComponent *const Sphere) {
         InteractibleComponent->OnInteract(this);
     }
   }
-}
-
-void AVrPlayer::InteractRight() {
-  if (HasAuthority())
-    Interact(RightGrabSphere);
-  else
-    Server_Interact(RightGrabSphere);
-}
-
-void AVrPlayer::InteractLeft() {
-  if (HasAuthority())
-    Interact(LeftGrabSphere);
-  else
-    Server_Interact(LeftGrabSphere);
 }
 
 // SERVERSIDE
